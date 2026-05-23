@@ -13,3 +13,6 @@ spring:
         format_sql: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  jwt:
+    secret: mySecretKeyForJWTTokenThatShouldBeLongEnough123!
+    exriration: 86400000
