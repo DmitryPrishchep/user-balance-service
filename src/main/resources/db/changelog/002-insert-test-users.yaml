@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: staryhroft
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: "Иван Иванов"
+              - column:
+                  name: date_of_birth
+                  value: "1995-05-01"
+              - column:
+                  name: password
+                  value: "$2a$10$TaQkpP.PF6y5oNTm/uXwiu7yO56KMAQuDqWJvUat1ZO/vKY99pxKW"
+        - insert:
+            tableName: account
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE name = 'Иван Иванов')
+              - column:
+                  name: balance
+                  value: "1000.00"
+              - column:
+                  name: initial_balance
+                  value: "1000.00"
+        - insert:
+            tableName: email_data
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE name = 'Иван Иванов')
+              - column:
+                  name: email
+                  value: "ivan@example.com"
+        - insert:
+            tableName: phone_data
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE name = 'Иван Иванов')
+              - column:
+                  name: phone
+                  value: "375291234567"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: "Петр Петров"
+              - column:
+                  name: date_of_birth
+                  value: "1990-10-15"
+              - column:
+                  name: password
+                  value: "$2a$10$TaQkpP.PF6y5oNTm/uXwiu7yO56KMAQuDqWJvUat1ZO/vKY99pxKW"
+        - insert:
+            tableName: account
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE name = 'Петр Петров')
+              - column:
+                  name: balance
+                  value: "500.00"
+              - column:
+                  name: initial_balance
+                  value: "500.00"
+        - insert:
+            tableName: email_data
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE name = 'Петр Петров')
+              - column:
+                  name: email
+                  value: "petr@example.com"
+        - insert:
+            tableName: phone_data
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE name = 'Петр Петров')
+              - column:
+                  name: phone
+                  value: "375291234568"
