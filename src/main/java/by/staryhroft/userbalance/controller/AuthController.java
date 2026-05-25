@@ -5,6 +5,8 @@ import by.staryhroft.userbalance.dto.LoginResponse;
 import by.staryhroft.userbalance.entity.User;
 import by.staryhroft.userbalance.repository.UserRepository;
 import by.staryhroft.userbalance.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Аутентификация", description = "Вход в систему и получение JWT-токена")
 public class AuthController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -30,6 +33,7 @@ public class AuthController {
         this.tokenProvider = tokenProvider;
     }
 
+    @Operation(summary = "Войти в систему", description = "Аутентификация по email+пароль или phone+пароль")
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         log.info("Попытка входа: email={}, phone={}", request.getEmail(), request.getPhone());

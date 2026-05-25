@@ -3,6 +3,9 @@ package by.staryhroft.userbalance.controller;
 import by.staryhroft.userbalance.dto.*;
 import by.staryhroft.userbalance.service.ContactService;
 import by.staryhroft.userbalance.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Пользователи", description = "Поиск, просмотр и управление контактами")
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -26,6 +30,7 @@ public class UserController {
         this.contactService = contactService;
     }
 
+    @Operation(summary = "Поиск пользователей", description = "Фильтрация по дате рождения, телефону, имени, email с пагинацией")
     @GetMapping("/search")
     public Page<UserDto> search(SearchRequest request, Pageable pageable) {
         log.info("Запрос на поиск пользователей: {}", request);
@@ -34,6 +39,7 @@ public class UserController {
         return result;
     }
 
+    @Operation(summary = "Профиль текущего пользователя")
     @GetMapping("/me")
     public UserDto getMe(Authentication authentication) {
         Long userId = (Long) authentication.getPrincipal();
@@ -41,6 +47,7 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
+    @Operation(summary = "Добавить email")
     @PostMapping("/me/emails")
     public void addEmail(Authentication authentication, @Valid @RequestBody UpdateContactRequest request) {
         Long userId = (Long) authentication.getPrincipal();
@@ -48,6 +55,7 @@ public class UserController {
         contactService.addEmail(userId, request.getValue());
     }
 
+    @Operation(summary = "Удалить email")
     @DeleteMapping("/me/emails/{emailId}")
     public void deleteEmail(Authentication authentication, @PathVariable Long emailId) {
         Long userId = (Long) authentication.getPrincipal();
@@ -55,6 +63,7 @@ public class UserController {
         contactService.deleteEmail(userId, emailId);
     }
 
+    @Operation(summary = "Обновить email")
     @PutMapping("/me/emails/{emailId}")
     public void updateEmail(Authentication authentication,
                             @PathVariable Long emailId,
@@ -64,6 +73,7 @@ public class UserController {
         contactService.updateEmail(userId, emailId, request.getValue());
     }
 
+    @Operation(summary = "Добавить телефон")
     @PostMapping("/me/phones")
     public void addPhone(Authentication authentication, @Valid @RequestBody UpdateContactRequest request) {
         Long userId = (Long) authentication.getPrincipal();
@@ -71,6 +81,7 @@ public class UserController {
         contactService.addPhone(userId, request.getValue());
     }
 
+    @Operation(summary = "Удалить телефон")
     @DeleteMapping("/me/phones/{phoneId}")
     public void deletePhone(Authentication authentication, @PathVariable Long phoneId) {
         Long userId = (Long) authentication.getPrincipal();
@@ -78,6 +89,7 @@ public class UserController {
         contactService.deletePhone(userId, phoneId);
     }
 
+    @Operation(summary = "Обновить телефон")
     @PutMapping("/me/phones/{phoneId}")
     public void updatePhone(Authentication authentication,
                             @PathVariable Long phoneId,
