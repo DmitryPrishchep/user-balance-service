@@ -5,7 +5,8 @@ import by.staryhroft.userbalance.dto.LoginResponse;
 import by.staryhroft.userbalance.entity.User;
 import by.staryhroft.userbalance.repository.UserRepository;
 import by.staryhroft.userbalance.security.JwtTokenProvider;
-import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,15 +14,25 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
 
+    public AuthController(UserRepository userRepository,
+                          PasswordEncoder passwordEncoder,
+                          JwtTokenProvider tokenProvider) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
+    }
+
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+        log.info("Попытка входа: email={}, phone={}", request.getEmail(), request.getPhone());
         User user;
         if (request.getEmail() != null && !request.getEmail().isEmpty()) {
             user = userRepository.findByEmail(request.getEmail())
@@ -36,6 +47,7 @@ public class AuthController {
             throw new RuntimeException("Неверный пароль");
         }
         String token = tokenProvider.generateToken(user.getId());
+        log.info("Успешный вход для пользователя с id {}", user.getId());
         return new LoginResponse(token);
     }
 }
